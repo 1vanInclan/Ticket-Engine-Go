@@ -1,7 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"ticket-engine/infrastructure/datastore"
+)
 
 func main() {
-	fmt.Println("Hellooooo")
+	_ = datastore.NewDB()
 }
