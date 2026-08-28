@@ -14,7 +14,7 @@ func NewDB() *gorm.DB {
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
-		log.Fatal("Failed to connect to database: %v", err)
+		log.Fatalf("Failed to connect to database: %v", err)
 	}
 
 	fmt.Println("Database connection established succesfully")
@@ -22,7 +22,7 @@ func NewDB() *gorm.DB {
 	// Automigracion de las entidades de dominio
 	err = db.AutoMigrate(&model.User{}, &model.Event{}, &model.Reservation{})
 	if err != nil {
-		log.Fatal("Failed to auto-migrate database: %v", err)
+		log.Fatalf("Failed to auto-migrate database: %v", err)
 	}
 
 	fmt.Println("Database migration completed")
