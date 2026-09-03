@@ -5,11 +5,14 @@ import (
 	"ticket-engine/interface/repository/reservation"
 	"ticket-engine/interface/repository/user"
 
+	"github.com/redis/go-redis/v9"
 	"gorm.io/gorm"
 )
 
-func Init(db *gorm.DB) {
+func Init(db *gorm.DB, rdb *redis.Client) {
 	user.SetDB(db)
 	event.SetDB(db)
 	reservation.SetDB(db)
+
+	event.SetRedis(rdb)
 }

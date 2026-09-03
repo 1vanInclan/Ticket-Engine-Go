@@ -3,14 +3,17 @@ package event
 import (
 	"context"
 	"errors"
+	"fmt"
 	"ticket-engine/domain/model"
 	usecaseRepo "ticket-engine/usecase/repository/event"
 
+	"github.com/redis/go-redis/v9"
 	"gorm.io/gorm"
 )
 
 type eventRepository struct {
-	db *gorm.DB
+	db  *gorm.DB
+	rdb *redis.Client
 }
 
 var EventRepo usecaseRepo.EventRepository = &eventRepository{}
@@ -18,6 +21,12 @@ var EventRepo usecaseRepo.EventRepository = &eventRepository{}
 func SetDB(db *gorm.DB) {
 	if repo, ok := EventRepo.(*eventRepository); ok {
 		repo.db = db
+	}
+}
+
+func SetRedis(rdb *redis.Client) {
+	if repo, ok := EventRepo.(*eventRepository); ok {
+		repo.rdb = rdb
 	}
 }
 
@@ -47,4 +56,11 @@ func (r *eventRepository) UpdateStock(ctx context.Context, eventID uint, newStoc
 	return r.db.WithContext(ctx).Model(&model.Event{}).
 		Where("id = ?", eventID).
 		Update("available_stock", newStock).Error
+}
+
+//---- redis -----
+
+func (r *eventRepository) SetStock(ctx context.Context, eventID uint, stock int) error {
+	key := fmt.Sprintf("event:stock:%d", eventID)
+	return r.rdb.Set(ctx, key, stock, 0).Err()
 }

@@ -2,6 +2,7 @@ package router
 
 import (
 	"ticket-engine/interface/controller"
+	"ticket-engine/interface/middleware"
 
 	"github.com/labstack/echo/v4"
 )
@@ -12,10 +13,12 @@ func Router(e *echo.Echo, appController controller.AppController) {
 	AuthRouter(public, appController.Auth)
 
 	// 2. Grupo Privado (Protegido con JWT)
-	// private := e.Group("/private")
-	// private.Use(middleware.AuthMiddleware())
+	private := e.Group("/private")
+	private.Use(middleware.AuthMiddleware())
 
-	// Aquí irán los módulos protegidos
-	// EventRouter(private, appController.Event)
+	// 3. Módulos compartidos entre público y privado
+	EventRouter(public, private, appController.Event)
+
+	// 4. Módulos 100% protegidos
 	// ReservationRouter(private, appController.Reservation)
 }

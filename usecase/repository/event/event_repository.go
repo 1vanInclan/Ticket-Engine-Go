@@ -10,4 +10,5 @@ type EventRepository interface {
 	FindByID(ctx context.Context, id uint) (*model.Event, error)
 	FindAll(ctx context.Context) ([]*model.Event, error)
 	UpdateStock(ctx context.Context, eventID uint, newStock int) error
+	SetStock(ctx context.Context, eventID uint, stock int) error
 }

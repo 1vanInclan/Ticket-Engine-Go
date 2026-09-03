@@ -26,6 +26,10 @@ func (i *eventInteractor) Create(ctx context.Context, input dto.CreateEventInput
 		return nil, err
 	}
 
+	if err := i.eventRepository.SetStock(ctx, newEvent.ID, newEvent.TotalCapacity); err != nil {
+		return nil, errors.New("error al inicializar stock en redis")
+	}
+
 	return toEventResponse(newEvent), nil
 }
 

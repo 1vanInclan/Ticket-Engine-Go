@@ -14,14 +14,15 @@ import (
 func main() {
 	// Services
 	db := datastore.NewDB()
-	_ = cache.NewRedisClient()
+	rdb := cache.NewRedisClient()
 
 	// Inicializar repositorios
-	repository.Init(db)
+	repository.Init(db, rdb)
 
 	// Inicializar controllers
 	appController := controller.AppController{
-		Auth: controller.AuthCtrl,
+		Auth:  controller.AuthCtrl,
+		Event: controller.EventCtrl,
 	}
 
 	e := echo.New()

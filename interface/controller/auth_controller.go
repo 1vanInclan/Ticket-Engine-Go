@@ -8,16 +8,6 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-type RegisterRequest struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
-}
-
-type LoginRequest struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
-}
-
 type AuthController struct {
 	authInteractor authInt.AuthInteractor
 }
@@ -27,7 +17,7 @@ var AuthCtrl = &AuthController{
 }
 
 func (c *AuthController) Register(ctx echo.Context) error {
-	var req RegisterRequest
+	var req dto.RegisterInput
 
 	if err := ctx.Bind(&req); err != nil {
 		return ctx.JSON(http.StatusBadRequest, map[string]string{"error": "payload inválido"})
@@ -51,7 +41,7 @@ func (c *AuthController) Register(ctx echo.Context) error {
 }
 
 func (c *AuthController) Login(ctx echo.Context) error {
-	var req LoginRequest
+	var req dto.LoginInput
 
 	if err := ctx.Bind(&req); err != nil {
 		return ctx.JSON(http.StatusBadRequest, map[string]string{"error": "payload inválido"})
