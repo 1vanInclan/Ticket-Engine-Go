@@ -21,8 +21,9 @@ func main() {
 
 	// Inicializar controllers
 	appController := controller.AppController{
-		Auth:  controller.AuthCtrl,
-		Event: controller.EventCtrl,
+		Auth:        controller.AuthCtrl,
+		Event:       controller.EventCtrl,
+		Reservation: controller.ReservationCtrl,
 	}
 
 	e := echo.New()

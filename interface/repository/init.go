@@ -11,8 +11,11 @@ import (
 
 func Init(db *gorm.DB, rdb *redis.Client) {
 	user.SetDB(db)
-	event.SetDB(db)
-	reservation.SetDB(db)
 
+	event.SetDB(db)
 	event.SetRedis(rdb)
+
+	reservation.SetDB(db)
+	reservation.SetRedis(rdb)
+
 }

@@ -20,5 +20,5 @@ func Router(e *echo.Echo, appController controller.AppController) {
 	EventRouter(public, private, appController.Event)
 
 	// 4. Módulos 100% protegidos
-	// ReservationRouter(private, appController.Reservation)
+	ReservationRouter(private, appController.Reservation)
 }
