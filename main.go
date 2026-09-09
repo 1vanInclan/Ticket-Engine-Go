@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"ticket-engine/infrastructure/cache"
 	"ticket-engine/infrastructure/datastore"
 	"ticket-engine/infrastructure/router"
@@ -32,6 +33,10 @@ func main() {
 	e.Use(middleware.Recover())
 
 	router.Router(e, appController)
+
+	for _, route := range e.Routes() {
+		fmt.Printf("%-6s %-30s --> %s\n", route.Method, route.Path, route.Name)
+	}
 
 	e.Logger.Fatal(e.Start((":8080")))
 

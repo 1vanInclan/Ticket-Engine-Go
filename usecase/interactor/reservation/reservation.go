@@ -13,6 +13,9 @@ type ReservationInteractor interface {
 	Create(ctx context.Context, userID uint, input dto.CreateReservationInput) (*dto.ReservationResponse, error)
 	FindByUserID(ctx context.Context, userID uint) ([]*dto.ReservationResponse, error)
 	FindByID(ctx context.Context, id uint) (*dto.ReservationResponse, error)
+
+	Confirm(ctx context.Context, reservationID uint, userID uint) (*dto.ReservationResponse, error)
+	Cancel(ctx context.Context, reservationID uint, userID uint) (*dto.ReservationResponse, error)
 }
 
 type reservationInteractor struct {

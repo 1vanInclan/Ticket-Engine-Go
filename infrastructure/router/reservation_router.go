@@ -12,4 +12,7 @@ func ReservationRouter(g *echo.Group, ctrl *resCtrl.ReservationController) {
 	group.POST("", ctrl.Create)
 	group.GET("", ctrl.FindByUserID)
 	group.GET("/:id", ctrl.FindByID)
+
+	group.PATCH("/:id/confirm", ctrl.Confirm)
+	group.PATCH("/:id/cancel", ctrl.Cancel)
 }

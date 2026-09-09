@@ -77,6 +77,64 @@ func (i *reservationInteractor) FindByID(ctx context.Context, id uint) (*dto.Res
 	return toReservationResponse(reservation), nil
 }
 
+func (i *reservationInteractor) Confirm(ctx context.Context, reservationID uint, userID uint) (*dto.ReservationResponse, error) {
+
+	res, err := i.reservationRepo.FindByID(ctx, reservationID)
+	if err != nil {
+		return nil, err
+	}
+
+	if res == nil {
+		return nil, errors.New("reservacion no encontrada")
+	}
+
+	if res.UserID != userID {
+		return nil, errors.New("Dont have authorization to this reservation")
+	}
+
+	if res.Status != model.StatusPending {
+		return nil, errors.New("Only can confirm pending reservations")
+	}
+
+	if err := i.reservationRepo.UpdateStatus(ctx, reservationID, model.StatusConfirmed); err != nil {
+		return nil, err
+	}
+
+	res.Status = model.StatusConfirmed
+	return toReservationResponse(res), nil
+
+}
+
+func (i *reservationInteractor) Cancel(ctx context.Context, reservationID uint, userID uint) (*dto.ReservationResponse, error) {
+	res, err := i.reservationRepo.FindByID(ctx, reservationID)
+	if err != nil {
+		return nil, err
+	}
+	if res == nil {
+		return nil, errors.New("reservación no encontrada")
+	}
+
+	if res.UserID != userID {
+		return nil, errors.New("no tienes autorización para esta reservación")
+	}
+
+	if res.Status != model.StatusPending {
+		return nil, errors.New("solo se pueden cancelar reservaciones pendientes")
+	}
+
+	if err := i.reservationRepo.UpdateStatus(ctx, reservationID, model.StatusCancelled); err != nil {
+		return nil, err
+	}
+
+	_, err = i.reservationRepo.IncrementStock(ctx, res.EventID, res.Quantity)
+	if err != nil {
+		return nil, err
+	}
+
+	res.Status = model.StatusCancelled
+	return toReservationResponse(res), nil
+}
+
 func toReservationResponse(r *model.Reservation) *dto.ReservationResponse {
 	resp := &dto.ReservationResponse{
 		ID:        r.ID,

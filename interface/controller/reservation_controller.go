@@ -73,3 +73,43 @@ func (c *ReservationController) FindByID(ctx echo.Context) error {
 
 	return ctx.JSON(http.StatusOK, res)
 }
+
+func (c *ReservationController) Confirm(ctx echo.Context) error {
+	idParam := ctx.Param("id")
+	reservationID, err := strconv.ParseUint(idParam, 10, 32)
+	if err != nil {
+		return ctx.JSON(http.StatusBadRequest, echo.Map{"error": "ID de reservación inválido"})
+	}
+
+	userID, ok := ctx.Get("userID").(uint)
+	if !ok {
+		return ctx.JSON(http.StatusUnauthorized, echo.Map{"error": "Usuario no autenticado"})
+	}
+
+	res, err := c.reservationInteractor.Confirm(ctx.Request().Context(), uint(reservationID), userID)
+	if err != nil {
+		return ctx.JSON(http.StatusBadRequest, echo.Map{"error": err.Error()})
+	}
+
+	return ctx.JSON(http.StatusOK, res)
+}
+
+func (c *ReservationController) Cancel(ctx echo.Context) error {
+	idParam := ctx.Param("id")
+	reservationID, err := strconv.ParseUint(idParam, 10, 32)
+	if err != nil {
+		return ctx.JSON(http.StatusBadRequest, echo.Map{"error": "ID de reservación inválido"})
+	}
+
+	userID, ok := ctx.Get("userID").(uint)
+	if !ok {
+		return ctx.JSON(http.StatusUnauthorized, echo.Map{"error": "Usuario no autenticado"})
+	}
+
+	res, err := c.reservationInteractor.Cancel(ctx.Request().Context(), uint(reservationID), userID)
+	if err != nil {
+		return ctx.JSON(http.StatusBadRequest, echo.Map{"error": err.Error()})
+	}
+
+	return ctx.JSON(http.StatusOK, res)
+}
