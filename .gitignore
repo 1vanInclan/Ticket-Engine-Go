@@ -1,0 +1,16 @@
+# Binary output
+ticket-engine
+
+# Environment variables
+.env
+
+# --- Terraform Ignore ---
+terraform/.terraform/
+terraform/*.tfstate
+terraform/*.tfstate.backup
+terraform/*.tfvars
+terraform/*.tfvars.json
+
+# --- SSH Keys & Secrets ---
+terraform/*.pem
+terraform/go-api-key.pem
